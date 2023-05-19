@@ -1,0 +1,135 @@
+body {
+    background-color: #FFF9F9;
+}
+
+/* navbar start */
+
+.nav-link, .dropdown-item, .nav-home{
+    color: #393E46;
+    font-family: 'Space Mono', monospace;
+    font-size: 1.3em;
+    font-weight: 800;
+}
+
+.nav-link {
+    margin-top: 15px;
+}
+
+
+.nav-link:hover, .nav-link:focus, .nav-link:active {
+    color: #6D9886;
+}
+
+
+.dropdown-item:hover, .dropdown-item:focus, .dropdown-item:active {
+    color: #6D9886;
+}
+
+.dropdown-menu {
+    background-color: #FFF9F9;
+    --bs-dropdown-link-active-bg: #A5C0DD;
+}
+
+.nav-link.dropdown-toggle.show {
+    color: #6D9886;
+}
+
+
+#navbarNavDropdown {
+    background-color: #F2E7D5;
+}
+
+.container-fluid {
+    margin: 0%;
+    --bs-gutter-x: 0;
+    --bs-gutter-y: 0;
+}
+
+.navbar {
+    --bs-navbar-padding-y: 0;
+}
+
+.navbar-collapse {
+    padding: 1%;
+}
+
+.navbar-brand, .navbar-brand:hover, .navbar-brand:focus {
+    color: #393E46;
+    font-family: 'Space Mono', monospace;
+    font-size:45px;
+    font-weight: bold;
+    text-align: center;
+}
+
+img {
+    margin-top: 12px;
+}
+
+/* navbar end */
+
+/* register form */
+
+.needs-validation {
+    margin-top: 2%;
+    border: 2px solid #393E46;
+    border-radius: 10px;
+    padding-top: 5%;
+    padding-bottom: 4%;
+    width: 60%;
+    margin-left: 20%;
+}
+
+.form-control {
+    width: 60%;
+    background-color: rgba(109, 152, 134, .1);
+    font-family: 'Space Mono', monospace;
+    border: 1px solid #393E46;
+}
+
+.col-form-label {
+    font-family: 'Space Mono', monospace;
+    color: #393E46;
+    font-weight: bold;
+}
+
+.col-12 {
+    margin-left: 20%;
+}
+
+#reg-header {
+    margin-top: 5%;
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    color: #393E46;
+    font-weight: 600;
+}
+
+.btn-primary {
+    background-color: #6D9886;
+    color: #FFF9F9;
+    font-weight: bold;
+    font-family: 'Space Mono', monospace;
+    margin-top: 2%;
+    width: 60%;
+    border: 1px solid #393E46;
+}
+
+.btn-primary:hover {
+    border: 1px solid #393E46;
+    background-color:rgba(6, 68, 32, .7);
+    color: #FFF9F9;
+}
+
+#exists {
+    margin-left: 20%;
+    font-family: 'Space Mono', monospace;
+    margin-top: 2%;
+}
+
+#login-link {
+    text-decoration: none;
+}
+
+.invalid-feedback {
+    font-family: 'Space Mono', monospace;
+}

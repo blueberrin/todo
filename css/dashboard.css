@@ -1,0 +1,237 @@
+body {
+    background-color: #FFF9F9;
+}
+
+/* navbar start */
+
+.nav-link, .dropdown-item, .nav-home{
+    color: #393E46;
+    font-family: 'Space Mono', monospace;
+    font-size: 1.3em;
+    font-weight: 800;
+}
+
+.nav-link {
+    margin-top: 15px;
+}
+
+
+.nav-link:hover, .nav-link:focus, .nav-link:active {
+    color: #6D9886;
+}
+
+
+.dropdown-item:hover, .dropdown-item:focus, .dropdown-item:active {
+    color: #6D9886;
+}
+
+.dropdown-menu {
+    background-color: #FFF9F9;
+    --bs-dropdown-link-active-bg: #A5C0DD;
+}
+
+.nav-link.dropdown-toggle.show {
+    color: #6D9886;
+}
+
+
+#navbarNavDropdown {
+    background-color: #F2E7D5;
+}
+
+.container-fluid {
+    margin: 0%;
+    --bs-gutter-x: 0;
+    --bs-gutter-y: 0;
+}
+
+.navbar {
+    --bs-navbar-padding-y: 0;
+}
+
+.navbar-collapse {
+    padding: 1%;
+}
+
+.navbar-brand, .navbar-brand:hover, .navbar-brand:focus {
+    color: #393E46;
+    font-family: 'Space Mono', monospace;
+    font-size:45px;
+    font-weight: bold;
+    text-align: center;
+}
+
+img {
+    margin-top: 12px;
+}
+
+/* navbar end */
+
+/* dashboard content */
+
+#list-header {
+    color: #393E46;
+    font-family: 'Space Mono', monospace;
+    font-weight: bold;
+    margin-top: 5%;
+    text-align: center;
+}
+
+.wrapper {
+    max-width: 500px;
+    padding: 28px 0 30px;
+    margin-left: 34%;
+    margin-top: 3%;
+    border: 1px solid #393E46;
+    border-radius: 7px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+  
+.task-input {
+    height: 52px;
+    padding: 0 25px;
+    position: relative;
+}
+
+.task-input input{
+    font-family: 'Space Mono', monospace;
+    height: 100%;
+    width: 70%;
+    outline: none;
+    margin-left: 15px;
+    font-size: 18px;
+    border-radius: 5px;
+    padding:10px;
+    border: 1px solid rgba(57, 62, 70, .5);
+  }
+  
+  .task-input button {
+    font-family: 'Space Mono', monospace;
+    background-color: #6D9886;
+    width: 100px;
+    color: #FFF9F9;
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 13px;
+    border: 1px solid rgba(57, 62, 70, .5);
+    cursor: pointer;
+}
+
+.task-input button:hover {
+    background-color: rgba(6, 68, 32, .7);
+    
+}
+
+
+
+
+/* test */
+
+.controls, li{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.controls{
+  padding: 18px 25px;
+  border-bottom: 1px solid #ccc;
+}
+.filters span{
+  margin: 0 8px;
+  font-size: 17px;
+  color: #444444;
+  cursor: pointer;
+}
+.filters span:first-child{
+  margin-left: 0;
+}
+.filters span.active{
+  color: #3C87FF;
+}
+.controls .clear-btn{
+  border: none;
+  opacity: 0.6;
+  outline: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  padding: 7px 13px;
+  border-radius: 4px;
+  letter-spacing: 0.3px;
+  pointer-events: none;
+  transition: transform 0.25s ease;
+  background: linear-gradient(135deg, #1798fb 0%, #2D5CFE 100%);
+}
+.clear-btn.active{
+  opacity: 0.9;
+  pointer-events: auto;
+}
+.clear-btn:active{
+  transform: scale(0.93);
+}
+.task-box{
+  margin-top: 20px;
+  margin-right: 5px;
+  padding: 0 20px 10px 25px;
+}
+.task-box.overflow{
+  overflow-y: auto;
+  max-height: 300px;
+}
+.task-box::-webkit-scrollbar{
+  width: 5px;
+}
+.task-box::-webkit-scrollbar-track{
+  background: #f1f1f1;
+  border-radius: 25px;
+}
+.task-box::-webkit-scrollbar-thumb{
+  background: #e6e6e6;
+  border-radius: 25px;
+}
+.task-box .task{
+  list-style: none;
+  font-size: 17px;
+  margin-bottom: 18px;
+  padding-bottom: 16px;
+  align-items: flex-start;
+  border-bottom: 1px solid #ccc;
+}
+.task-box .task:last-child{
+  margin-bottom: 0;
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+.task-box .task label{
+  display: flex;
+  align-items: flex-start;
+}
+.task label input{
+  margin-top: 7px;
+  accent-color: #3C87FF;
+}
+.task label p{
+  user-select: none;
+  margin-left: 12px;
+  word-wrap: break-word;
+}
+.task label p.checked{
+  text-decoration: line-through;
+}
+.task-box .settings{
+  position: relative;
+}
+
+.settings li:hover{
+  background: #f5f5f5;
+}
+.settings li i{
+  padding-right: 8px;
+}
+
+.settings :where(i, li){
+  cursor: pointer;
+}
+
+
+      

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="../img/favicon.ico">
+        <title>Register</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+        <link href="../css/register.css" rel="stylesheet" type="text/css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+
+         <!-- navbar start -->
+
+         <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+              <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <a class="navbar-brand" href="../index.html">
+                  <img src="../img/todo.png" alt="Logo" width="50" height="44" class="d-inline-block align-text-top">
+                  ToDo
+                </a>
+                <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../index.html">Home</a>
+                  </li>
+                 
+                  <li class="nav-item dropdown">
+                    <a
+                      class="nav-link dropdown-toggle"
+                      href="#"
+                      role="button"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      Account
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="login.html">Login</a></li>
+                      <li><a class="dropdown-item" href="register.html">Register</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+
+        <!-- navbar end -->
+
+        <!-- register form start -->
+
+        <h2 id="reg-header">Join Us Today!</h2>
+        <form class="needs-validation" id="reg-form" novalidate>
+          <div class="col-12">
+            <label for="txtFname" class="col-sm-2 col-form-label" id="lblFname">First Name</label>
+            <input type="text" class="form-control" id="txtFname" placeholder="First Name" required>
+            <div class="invalid-feedback">
+              Please Enter Your First Name
+            </div>
+          </div>
+
+          <div class="col-12">
+            <label for="txtLname" class="col-sm-2 col-form-label">Last Name</label>
+            <input type="text" class="form-control" id="txtLname" placeholder="Last Name" required>
+            <div class="invalid-feedback">
+              Please Enter Your Last Name
+            </div>
+          </div>
+
+          <div class="col-12">
+            <label for="txtEmail" class="col-sm-2 col-form-label">Email</label>
+            <input type="email" class="form-control" id="txtEmail" placeholder="Email" required>
+            <div class="invalid-feedback">
+              Please Enter A Valid Email
+            </div>
+          </div>
+
+          <div class="col-12">
+            <label for="txtPass" class="col-sm-2 col-form-label" id="lblPass">Password</label>
+            <input type="password" class="form-control" id="txtPass" placeholder="Password" required>
+            <div class="invalid-feedback">
+              Please Enter Your Password
+            </div>
+          </div>
+
+          <div class="col-12">
+            <label for="txtPass2" class="col-sm-2 col-form-label">Confirm Password</label>
+            <input type="password" class="form-control" id="txtPass2" placeholder="Re-type Password" required>
+            <div class="invalid-feedback">
+              Please Confirm Your Password
+            </div>
+          </div>
+
+          <div class="col-12">
+            <button type="submit" class="btn btn-primary" id="regBtn">Register</button>
+          </div>
+
+          <p id="exists">Already Have An Account? <a href="login.html" id="login-link">Login</a></p>
+        </form>
+
+        <br>
+
+        <!-- register form end -->
+
+        
+        <script>
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (() => {
+            'use strict'
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            const forms = document.querySelectorAll('.needs-validation')
+
+        // Loop over them and prevent submission
+             Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+
+            form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+        </script>
+
+        <!-- firebase setup -->
+
+        <script type="module">
+          // Import the functions you need from the SDKs you need
+          import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
+          import { getDatabase, set, ref } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-database.js";
+          import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
+          
+          
+          // TODO: Add SDKs for Firebase products that you want to use
+          // https://firebase.google.com/docs/web/setup#available-libraries
+        
+          // Your web app's Firebase configuration
+          const firebaseConfig = {
+            apiKey: "AIzaSyCo5VOhI_Ma03UaeoEcDb70aWFyrZB5tY0",
+            authDomain: "todo-8779e.firebaseapp.com",
+            databaseURL: "https://todo-8779e-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "todo-8779e",
+            storageBucket: "todo-8779e.appspot.com",
+            messagingSenderId: "384761476425",
+            appId: "1:384761476425:web:038bc9f9332478b88d9698"
+         };
+        
+          // Initialize Firebase
+          const app = initializeApp(firebaseConfig);
+          const db = getDatabase();
+          const auth = getAuth();
+
+          // call the function
+          regBtn.addEventListener('click',(e) => {
+            e.preventDefault()
+
+            // Document elements
+          var txtFname = document.getElementById('txtFname').value;
+          var txtLname = document.getElementById('txtLname').value;
+          var txtEmail = document.getElementById('txtEmail').value;
+          var txtPass = document.getElementById('txtPass').value;
+          var txtPass2 = document.getElementById('txtPass2').value;
+
+          if(txtPass!=txtPass2) {
+            alert("Passwords Do Not Match!");
+          } else {
+          
+          createUserWithEmailAndPassword(auth, txtEmail, txtPass)
+            .then((userCredential) => {
+          // Signed in 
+            const user = userCredential.user;
+            set(ref(db, 'users/'+ user.uid),{
+              FirstName: txtFname,
+              LastName: txtLname,
+              Email: txtEmail,
+              Password: txtPass
+
+            })
+            alert('Account created!');
+            
+         
+          })
+
+          
+            .catch((error) => {
+              const errorCode = error.code;
+              const errorMessage = error.message;
+
+              alert(errorMessage);
+          });}
+
+        });
+
+
+
+
+        </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+
+    </body>
+</html>
