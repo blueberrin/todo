@@ -52,7 +52,7 @@
 
         <!-- login form start -->
         <h2 id="reg-header">Welcome, It's Good To See You!</h2>
-        <form class="needs-validation" id="login-form" novalidate>
+        <form class="needs-validation" id="login-form" novalidate method="POST" action="{{ url_for('login') }}">
           <div class="col-12">
             <label for="txtEmail" class="col-sm-2 col-form-label">Email</label>
             <input type="email" class="form-control" id="txtEmail" placeholder="Email" required>
