@@ -5,7 +5,15 @@ app = Flask(__name__)
 app.secret_key = 'todowebapp_secret_key'
 
 @app.route('/')
-def home():
+def index():
+    return render_template('index.html')
+
+@app.route('/register')
+def register():
+    return render_template('register.html')
+
+@app.route('/dashboard')
+def dashboard():
     if 'email' in session:
         return render_template('dashboard.html', email=session['email'])
     return redirect(url_for('login'))
