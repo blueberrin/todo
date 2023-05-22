@@ -19,13 +19,13 @@
          <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="container-fluid">
               <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <a class="navbar-brand" href="../index.html">
+                <a class="navbar-brand" href="{{ url_for('index') }}">
                   <img src="{{ url_for('static', filename='todo.png') }}" alt="Logo" width="50" height="44" class="d-inline-block align-text-top">
                   ToDo
                 </a>
                 <ul class="navbar-nav">
                   <li class="nav-item">
-                    <a class="nav-link" href="../index.html">Home</a>
+                    <a class="nav-link" href="{{ url_for('index') }}">Home</a>
                   </li>
                  
                   <li class="nav-item dropdown">
@@ -39,8 +39,8 @@
                       Account
                     </a>
                     <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="login.html">Login</a></li>
-                      <li><a class="dropdown-item" href="register.html">Register</a></li>
+                      <li><a class="dropdown-item" href="{{ url_for('login') }}">Login</a></li>
+                      <li><a class="dropdown-item" href="{{ url_for('register') }}">Register</a></li>
                     </ul>
                   </li>
                 </ul>
@@ -98,7 +98,7 @@
             <button type="submit" class="btn btn-primary" id="regBtn">Register</button>
           </div>
 
-          <p id="exists">Already Have An Account? <a href="login.html" id="login-link">Login</a></p>
+          <p id="exists">Already Have An Account? <a href="{{ url_for('login') }}" id="login-link">Login</a></p>
         </form>
 
         <br>

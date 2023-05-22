@@ -12,18 +12,18 @@ def index():
 def register():
     return render_template('register.html')
 
-@app.route('/dashboard')
-def dashboard():
-    if 'email' in session:
-        return render_template('dashboard.html', email=session['email'])
-    return redirect(url_for('login'))
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         session['email'] = request.form['email']
         return redirect(url_for('dashboard'))
     return render_template('login.html')
+
+@app.route('/dashboard')
+def dashboard():
+    if 'email' in session:
+        return render_template('dashboard.html', email=session['email'])
+    return redirect(url_for('login'))
 
 @app.route('/logout')
 def logout():
