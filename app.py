@@ -15,12 +15,12 @@ def login():
     if request.method == 'POST':
         session['email'] = request.form['email']
         return redirect(url_for('dashboard'))
-    return render_template('html/login.html')
+    return render_template('login.html')
 
 @app.route('/logout')
 def logout():
     session.pop('email', None)
-    return redirect(url_for('html/login'))
+    return redirect(url_for('login'))
 
 if __name__ == '__main__':
     app.run(port=5500)
