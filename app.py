@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, jsonify
 
 
 app = Flask(__name__)
@@ -12,18 +12,20 @@ def index():
 def register():
     return render_template('register.html')
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
-        session['email'] = request.form['email']
-        return redirect(url_for('dashboard'))
-    return render_template('login.html')
+        email = request.form["email"]
+        session["email"] = email
+        return jsonify({'success': True})
+    else:
+        return render_template('login.html')
 
 @app.route('/dashboard')
 def dashboard():
     if 'email' in session:
         return render_template('dashboard.html', email=session['email'])
-    return redirect(url_for('login'))
+    return redirect(url_for('dashboard'))
 
 @app.route('/logout')
 def logout():

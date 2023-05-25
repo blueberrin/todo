@@ -109,7 +109,7 @@
 
             signOut(auth).then(() => {
             // Sign-out successful.
-            window.location = 'login.html';
+            window.location = "{{ url_for('login') }}";
             }).catch((error) => {
             // An error happened.
             const errorCode = error.code;
