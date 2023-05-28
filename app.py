@@ -15,7 +15,8 @@ def register():
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
-        email = request.form["txtEmail"]
+        data = request.get_json()
+        email = data.get("email")
         session["email"] = email
         return jsonify({'success': True})
     else:
@@ -25,11 +26,12 @@ def login():
 def dashboard():
     if 'email' in session:
         return render_template('dashboard.html', email=session['email'])
-    return redirect(url_for('dashboard'))
+    return redirect(url_for('login'))
 
 @app.route('/logout')
 def logout():
     session.pop('email', None)
+    session.clear()
     return redirect(url_for('login'))
 
 if __name__ == '__main__':
