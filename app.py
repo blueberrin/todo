@@ -15,7 +15,7 @@ def register():
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
-        email = request.form["email"]
+        email = request.form["txtEmail"]
         session["email"] = email
         return jsonify({'success': True})
     else:

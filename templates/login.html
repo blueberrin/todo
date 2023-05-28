@@ -55,7 +55,7 @@
         <form class="needs-validation" id="login-form" novalidate method="POST" action="{{ url_for('login') }}">
           <div class="col-12">
             <label for="txtEmail" class="col-sm-2 col-form-label">Email</label>
-            <input type="email" class="form-control" id="txtEmail" placeholder="Email" required>
+            <input type="email" class="form-control" id="txtEmail" name="txtEmail" placeholder="Email" required>
             <div class="invalid-feedback">
               Please Enter A Valid Email
             </div>
@@ -108,7 +108,7 @@
             // Import the functions you need from the SDKs you need
             import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
             import { getDatabase } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-database.js";
-            import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
+            import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
 
 
             // TODO: Add SDKs for Firebase products that you want to use
@@ -143,23 +143,15 @@
                   const user = userCredential.user;
 
                   // you should call your own server, to set the email in the session
-                  onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                      const email = user.email;
-                      login(email);
-                      // const uid = user.uid;
-                      // ...
-                    } 
-                  });
-
-
-                  function login(email) {
+                  
+                  const idToken = userCredential.user.getIdToken();
                     fetch('/login', {
                     method: 'post',
-                    body: JSON.stringify({email}),
+                    body: JSON.stringify({email: txtEmail}),
                     headers: {
+                      'Content-Type': 'application/json',
                       'Accept': 'application/json'
-                    },
+                    }
 
                   }).then(resp => {
 
@@ -168,11 +160,9 @@
                   }).catch(error => {
 
                   });
-                  }
-                  
 
-                  
-                  
+
+
                 // ...
             })
               .catch((error) => {
