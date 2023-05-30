@@ -1,97 +1,164 @@
-const taskInput = document.querySelector(".task-input input"),
-filters = document.querySelectorAll(".filters span"),
-taskBox = document.querySelector(".task-box");
+// firebase setup
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
+import { getDatabase, ref, push, update, get } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-database.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyCo5VOhI_Ma03UaeoEcDb70aWFyrZB5tY0",
+  authDomain: "todo-8779e.firebaseapp.com",
+  databaseURL: "https://todo-8779e-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "todo-8779e",
+  storageBucket: "todo-8779e.appspot.com",
+  messagingSenderId: "384761476425",
+  appId: "1:384761476425:web:038bc9f9332478b88d9698"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getDatabase();
+const auth = getAuth();
+const addBtn = document.getElementById("addBtn");
+const taskInput = document.querySelector(".task-input input");
+const filters = document.querySelectorAll(".filters span");
+const taskBox = document.querySelector(".task-box");
 
 let editId,
-isEditTask = false,
-todos = JSON.parse(localStorage.getItem("todo-list"));
-
-filters.forEach(btn => {
-    btn.addEventListener("click", () => {
-        document.querySelector("span.active").classList.remove("active");
-        btn.classList.add("active");
-        showTodo(btn.id);
-    });
-});
-
-function showTodo(filter) {
-    let liTag = "";
-    if(todos) {
-        todos.forEach((todo, id) => {
-            let completed = todo.status == "completed" ? "checked" : "";
-            if(filter == todo.status || filter == "all") {
-                liTag += `<li class="task">
-                            <label for="${id}">
-                                <input onclick="updateStatus(this)" type="checkbox" id="${id}" ${completed}>
-                                <p class="${completed}">${todo.name}</p>
-                            </label>
-                            <div class="settings">
-                                <i onclick="showMenu(this)" class="uil uil-ellipsis-h"></i>
-                                <ul class="task-menu">
-                                    <li onclick='editTask(${id}, "${todo.name}")'><i class="uil uil-pen"></i>Edit</li>
-                                    <li onclick='deleteTask(${id}, "${filter}")'><i class="uil uil-trash"></i>Delete</li>
-                                </ul>
-                            </div>
-                        </li>`;
-            }
-        });
-    }
-    taskBox.innerHTML = liTag || `<span>You don't have any task here</span>`;
-    
-}
-showTodo("all");
-
-function showMenu(selectedTask) {
-    let menuDiv = selectedTask.parentElement.lastElementChild;
-    menuDiv.classList.add("show");
-    document.addEventListener("click", e => {
-        if(e.target.tagName != "I" || e.target != selectedTask) {
-            menuDiv.classList.remove("show");
-        }
-    });
-}
-
-function updateStatus(selectedTask) {
-    let taskName = selectedTask.parentElement.lastElementChild;
-    if(selectedTask.checked) {
-        taskName.classList.add("checked");
-        todos[selectedTask.id].status = "completed";
-    } else {
-        taskName.classList.remove("checked");
-        todos[selectedTask.id].status = "pending";
-    }
-    localStorage.setItem("todo-list", JSON.stringify(todos))
-}
+  isEditTask = false;
 
 function editTask(taskId, textName) {
-    editId = taskId;
-    isEditTask = true;
-    taskInput.value = textName;
-    taskInput.focus();
-    taskInput.classList.add("active");
+  editId = taskId;
+  isEditTask = true;
+  taskInput.value = textName;
+  taskInput.focus();
+  taskInput.classList.add("active");
+  const user = auth.currentUser;
+  if (user) {
+    const taskRef = ref(db, `tasks/${user.uid}/${taskId}`);
+    get(taskRef)
+      .then((snapshot) => {
+        const task = snapshot.val();
+        if (task) {
+          taskInput.value = task.name;
+          if (task.status === "completed") {
+            document.getElementById(taskId).checked = true;
+          }
+        }
+      })
+      .catch((error) => {
+        console.error("Error retrieving task:", error);
+      });
+  }
 }
 
-function deleteTask(deleteId, filter) {
+function addFunction() {
+    const userTask = taskInput.value.trim();
+    if (userTask) {
+      const user = auth.currentUser;
+      if (user) {
+        const tasksRef = ref(db, `tasks/${user.uid}`);
+        if (!isEditTask) {
+          const newTaskRef = push(tasksRef);
+          const taskInfo = { name: userTask, status: "pending" };
+          update(newTaskRef, taskInfo);
+        } else {
+          const taskRef = ref(tasksRef, editId);
+          update(taskRef, { name: userTask });
+          isEditTask = false;
+          editId = null;
+        }
+      }
+      taskInput.value = "";
+      showTodo(document.querySelector("span.active").id);
+    }
+  }
+  
+  
+  filters.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelector("span.active").classList.remove("active");
+      btn.classList.add("active");
+      showTodo(btn.id);
+    });
+  });
+  
+  function showTodo(filter) {
+    let liTag = "";
+    const user = auth.currentUser;
+    if (user) {
+      const tasksRef = ref(db, `tasks/${user.uid}`);
+      get(tasksRef)
+        .then((snapshot) => {
+          const tasks = snapshot.val();
+          if (tasks) {
+            Object.entries(tasks).forEach(([id, task]) => {
+              let completed = task.status === "completed" ? "checked" : "";
+              if (filter === task.status || filter === "all") {
+                liTag += `<li class="task">
+                            <label for="${id}">
+                              <input onclick="updateStatus(this)" type="checkbox" id="${id}" ${completed}>
+                              <p class="${completed}">${task.name}</p>
+                            </label>
+                            <div class="settings">
+                              <i onclick="showMenu(this)" class="uil uil-ellipsis-h"></i>
+                              <ul class="task-menu">
+                                <li onclick='editTask("${id}", "${task.name}")'><i class="uil uil-pen"></i>Edit</li>
+                                <li onclick='deleteTask("${id}", "${filter}")'><i class="uil uil-trash"></i>Delete</li>
+                              </ul>
+                            </div>
+                          </li>`;
+              }
+            });
+          }
+          taskBox.innerHTML = liTag || `<span>You don't have any tasks here</span>`;
+        })
+        .catch((error) => {
+          console.error("Error retrieving tasks:", error);
+        });
+    }
+  }
+  
+  function showMenu(selectedTask) {
+    let menuDiv = selectedTask.parentElement.lastElementChild;
+    menuDiv.classList.add("show");
+    document.addEventListener("click", (e) => {
+      if (e.target.tagName !== "I" || e.target !== selectedTask) {
+        menuDiv.classList.remove("show");
+      }
+    });
+  }
+  
+  function updateStatus(selectedTask) {
+    const taskId = selectedTask.id;
+    const user = auth.currentUser;
+    if (user) {
+      const taskRef = ref(db, `tasks/${user.uid}/${taskId}`);
+      if (selectedTask.checked) {
+        update(taskRef, { status: "completed" });
+      } else {
+        update(taskRef, { status: "pending" });
+      }
+    }
+  }
+  
+  function deleteTask(deleteId, filter) {
     isEditTask = false;
-    todos.splice(deleteId, 1);
-    localStorage.setItem("todo-list", JSON.stringify(todos));
-    showTodo(filter);
-}
-
-
- function addfunction(){
-    let userTask = taskInput.value.trim();
-    if(userTask) {
-         if(!isEditTask) {
-             todos = !todos ? [] : todos;
-             let taskInfo = {name: userTask, status: "pending"};
-             todos.push(taskInfo);
-         } else {
-             isEditTask = false;
-             todos[editId].name = userTask;
-         }
-         taskInput.value = "";
-         localStorage.setItem("todo-list", JSON.stringify(todos));
-         showTodo(document.querySelector("span.active").id);
-     }
- };
+    const user = auth.currentUser;
+    if (user) {
+      const taskRef = ref(db, `tasks/${user.uid}/${deleteId}`);
+      taskRef
+        .remove()
+        .then(() => {
+          showTodo(filter);
+        })
+        .catch((error) => {
+          console.error("Error deleting task:", error);
+        });
+    }
+  }
+  
+  addBtn.addEventListener("click", addFunction);
+  

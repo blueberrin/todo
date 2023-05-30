@@ -18,6 +18,7 @@ def login():
         data = request.get_json()
         email = data.get("email")
         session["email"] = email
+        print("Email stored in session:", session.get("email"))
         return jsonify({'success': True})
     else:
         return render_template('login.html')
@@ -25,7 +26,8 @@ def login():
 @app.route('/dashboard')
 def dashboard():
     if 'email' in session:
-        return render_template('dashboard.html', email=session['email'])
+        email = session['email']
+        return render_template('dashboard.html', email=email)
     return redirect(url_for('login'))
 
 @app.route('/logout')
