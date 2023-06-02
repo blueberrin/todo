@@ -29,30 +29,30 @@ const taskBox = document.querySelector(".task-box");
 let editId,
   isEditTask = false;
 
-function editTask(taskId, textName) {
-  editId = taskId;
-  isEditTask = true;
-  taskInput.value = textName;
-  taskInput.focus();
-  taskInput.classList.add("active");
-  const user = auth.currentUser;
-  if (user) {
-    const taskRef = ref(db, `tasks/${user.uid}/${taskId}`);
-    get(taskRef)
-      .then((snapshot) => {
-        const task = snapshot.val();
-        if (task) {
-          taskInput.value = task.name;
-          if (task.status === "completed") {
-            document.getElementById(taskId).checked = true;
+  function editTask(taskId, textName) {
+    editId = taskId;
+    isEditTask = true;
+    taskInput.value = textName;
+    taskInput.focus();
+    taskInput.classList.add("active");
+    const user = auth.currentUser;
+    if (user) {
+      const taskRef = ref(db, `tasks/${user.uid}/${taskId}`);
+      get(taskRef)
+        .then((snapshot) => {
+          const task = snapshot.val();
+          if (task) {
+            taskInput.value = task.name;
+            if (task.status === "completed") {
+              document.getElementById(taskId).checked = true;
+            }
           }
-        }
-      })
-      .catch((error) => {
-        console.error("Error retrieving task:", error);
-      });
+        })
+        .catch((error) => {
+          console.error("Error retrieving task:", error);
+        });
+    }
   }
-}
 
 function addFunction() {
     const userTask = taskInput.value.trim();
@@ -77,14 +77,6 @@ function addFunction() {
   }
   
   
-  filters.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      document.querySelector("span.active").classList.remove("active");
-      btn.classList.add("active");
-      showTodo(btn.id);
-    });
-  });
-  
   function showTodo(filter) {
     let liTag = "";
     const user = auth.currentUser;
@@ -105,8 +97,8 @@ function addFunction() {
                             <div class="settings">
                               <i onclick="showMenu(this)" class="uil uil-ellipsis-h"></i>
                               <ul class="task-menu">
-                                <li onclick='editTask("${id}", "${task.name}")'><i class="uil uil-pen"></i>Edit</li>
-                                <li onclick='deleteTask("${id}", "${filter}")'><i class="uil uil-trash"></i>Delete</li>
+                                <li onclick="editTask('${id}', '${task.name}')"><i class="uil uil-pen"></i>Edit</li>
+                                <li onclick="deleteTask('${id}', '${filter}')"><i class="uil uil-trash"></i>Delete</li>
                               </ul>
                             </div>
                           </li>`;
@@ -120,6 +112,14 @@ function addFunction() {
         });
     }
   }
+
+  filters.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelector("span.active").classList.remove("active");
+      btn.classList.add("active");
+      showTodo(btn.id);
+    });
+  });
   
   function showMenu(selectedTask) {
     let menuDiv = selectedTask.parentElement.lastElementChild;
@@ -159,6 +159,5 @@ function addFunction() {
         });
     }
   }
-  
   addBtn.addEventListener("click", addFunction);
   
