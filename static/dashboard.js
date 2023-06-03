@@ -26,33 +26,35 @@ const taskInput = document.querySelector(".task-input input");
 const filters = document.querySelectorAll(".filters span");
 const taskBox = document.querySelector(".task-box");
 
-let editId,
-  isEditTask = false;
+
+
+let isEditTask = false;
 
   function editTask(taskId, textName) {
-    editId = taskId;
-    isEditTask = true;
-    taskInput.value = textName;
-    taskInput.focus();
-    taskInput.classList.add("active");
-    const user = auth.currentUser;
-    if (user) {
-      const taskRef = ref(db, `tasks/${user.uid}/${taskId}`);
-      get(taskRef)
-        .then((snapshot) => {
-          const task = snapshot.val();
-          if (task) {
-            taskInput.value = task.name;
-            if (task.status === "completed") {
-              document.getElementById(taskId).checked = true;
-            }
+    console.log("editTask called")
+  isEditTask = true;
+  taskInput.value = textName;
+  taskInput.focus();
+  taskInput.classList.add("active");
+  const user = auth.currentUser;
+  if (user) {
+    const taskRef = ref(db, `tasks/${user.uid}/${taskId}`);
+    get(taskRef)
+      .then((snapshot) => {
+        const task = snapshot.val();
+        if (task) {
+          taskInput.value = task.name;
+          if (task.status === "completed") {
+            document.getElementById(taskId).checked = true;
           }
-        })
-        .catch((error) => {
-          console.error("Error retrieving task:", error);
-        });
-    }
+        }
+      })
+      .catch((error) => {
+        console.error("Error retrieving task:", error);
+      });
   }
+}
+
 
 function addFunction() {
     const userTask = taskInput.value.trim();
@@ -102,6 +104,7 @@ function addFunction() {
                               </ul>
                             </div>
                           </li>`;
+                          
               }
             });
           }
@@ -149,8 +152,7 @@ function addFunction() {
     const user = auth.currentUser;
     if (user) {
       const taskRef = ref(db, `tasks/${user.uid}/${deleteId}`);
-      taskRef
-        .remove()
+      taskRef.remove()
         .then(() => {
           showTodo(filter);
         })
@@ -160,4 +162,6 @@ function addFunction() {
     }
   }
   addBtn.addEventListener("click", addFunction);
-  
+
+
+

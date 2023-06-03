@@ -10,6 +10,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
     </head>
 
     <body>
@@ -51,38 +52,39 @@
         <!-- navbar end -->
 
 
-        <!-- dashboard content -->
+      <!-- dashboard content -->
 
-        <h1 id="list-header">List Of ToDos</h1>
+      <h1 id="list-header">List Of ToDos</h1>
 
-        <div class="wrapper">
-          <div class="task-input">
-          <input type="text"  placeholder="Add A New ToDo">
-            <button id="addBtn">ADD</button>
-        </div>
-       
+      <div class="wrapper">
+        <div class="task-input">
+        <input type="text"  placeholder="Add A New ToDo" id="taskInput">
+          <button id="addBtn">Add</button>
+          <button id="viewBtn">View My ToDos</button>
+      </div>
+     
 
-        <div class="controls">
-          <div class="filters">
-            <span class="active" id="all">All</span>
-            <span id="pending">Pending</span>
-            <span id="completed">Completed</span>
-          </div>
-          
-        </div>
-        <ul class="task-box"></ul>
-        </div>
-        <br><br>
+      <!-- <div class="controls">
+        <div class="filters">
+          <span class="active" id="all">All</span>
+          <span id="pending">Pending</span>
+          <span id="completed">Completed</span>
+        </div> -->
+        
+      </div>
+      <ul class="task-box" id="taskBox"></ul>
+      </div>
+      <br><br>
 
        
      
 
         <!-- firebase logout -->
-        <script type="module" src="{{ url_for('static', filename='dashboard.js') }}"></script>
+        
         <script type="module">
           // Import the functions you need from the SDKs you need
           import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
-          import { getDatabase } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-database.js";
+          import { getDatabase, ref, push, update, get, onValue, remove } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-database.js";
           import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
           // TODO: Add SDKs for Firebase products that you want to use
           // https://firebase.google.com/docs/web/setup#available-libraries
@@ -100,7 +102,14 @@
         
           // Initialize Firebase
           const app = initializeApp(firebaseConfig);
+          const db = getDatabase();
           const auth = getAuth();
+          const addBtn = document.getElementById("addBtn");
+          const viewBtn = document.getElementById("viewBtn");
+          const taskInput = document.getElementById('taskInput');
+          const taskBox = document.getElementById('taskBox');
+
+          
 
           logoutBtn.addEventListener('click',(e) =>{
             e.preventDefault()
@@ -116,7 +125,134 @@
             });
 
           });
-        
+
+          function addTask() {
+            const user = auth.currentUser;
+            const tasksRef = ref(db, `tasks/${user.uid}`);
+
+            const userTask = taskInput.value.trim();
+            if (userTask !== '') {
+             
+              const taskData = {
+                name: userTask,
+                status: "pending",
+              };
+
+             
+              const newTaskRef = push(tasksRef);
+              update(newTaskRef, taskData);
+            } else {
+              
+              alert("Task name cannot be empty");
+            }
+          }
+
+          function deleteTask(taskId) {
+            const user = auth.currentUser;
+            if (user) {
+              const taskRef = ref(db, `tasks/${user.uid}/${taskId}`);
+              
+              remove(taskRef)
+                .then(() => {
+                  console.log("Task deleted successfully");
+                })
+                .catch((error) => {
+                  console.error("Error deleting task:", error);
+                });
+            } else {
+              console.log("No authenticated user");
+            }
+          }
+
+  
+          function displayTasks() {
+            const user = auth.currentUser;
+            if (user) {
+              const tasksRef = ref(db, `tasks/${user.uid}`);
+
+              
+              taskBox.innerHTML = '';
+
+              // Get the tasks from the database
+              get(tasksRef)
+                .then((snapshot) => {
+                  snapshot.forEach((childSnapshot) => {
+                    const task = childSnapshot.val();
+                    const taskId = childSnapshot.key;
+
+                    
+                    const li = document.createElement('li');
+                    li.textContent = task.name;
+                    li.id = taskId;
+
+                    
+                    const completeBtn = document.createElement('button');
+                    completeBtn.textContent = 'Complete';
+                    completeBtn.addEventListener('click', () => {
+                      const isCompleted = !task.completed;
+                      updateTaskStatus(taskId, isCompleted);
+                    });
+
+              
+                    if (task.status === 'completed') {
+                      li.classList.add('completed-task');
+                   
+                    }
+
+                    
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.textContent = 'Delete';
+                    deleteBtn.addEventListener('click', () => {
+                      deleteTask(taskId);
+                      
+                      li.remove();
+                    });
+
+                    
+                    li.appendChild(completeBtn);
+
+                    
+                    li.appendChild(deleteBtn);
+
+                    
+                    taskBox.appendChild(li);
+                  });
+                })
+                .catch((error) => {
+                  
+                  console.error(error);
+                });
+            } else {
+              
+              console.log('No authenticated user');
+            }
+          }
+
+          function updateTaskStatus(taskId, status) {
+            const user = auth.currentUser;
+            if (user) {
+              const taskRef = ref(db, `tasks/${user.uid}/${taskId}`);
+              
+              update(taskRef, { status: "completed" })
+                .then(() => {
+                  console.log("Task status updated successfully");
+                  displayTasks();
+                })
+                .catch((error) => {
+                  console.error("Error updating task status:", error);
+                });
+            } else {
+              console.log("No authenticated user");
+            }
+          }
+
+
+
+
+
+          addBtn.addEventListener("click", addTask);
+          viewBtn.addEventListener("click", displayTasks);
+
 
 
         </script>
